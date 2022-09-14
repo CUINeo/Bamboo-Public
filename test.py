@@ -15,7 +15,7 @@ def replace(filename, pattern, replacement):
 	f.close()
 
 def set_ndebug(ndebug):
-    f = open("system/global.h", "a+")
+    f = open("system/global.h", "r+")
     found = None
     set_ndebug = False
     for line in f:
