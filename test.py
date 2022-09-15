@@ -59,6 +59,11 @@ def run(test = '', job=None, numa=True):
             os.system("numactl --interleave all ./rundb %s | tee temp.out" % app_flags)
         else:
             os.system("./rundb %s | tee temp.out" % app_flags)
+    else:
+        if numa:
+            os.system("numactl --interleave all ./rundb | tee temp.out")
+        else:
+            os.system("./rundb | tee temp.out")
 	
 def eval_arg(job, arg):
     return ((arg in job) and (job[arg] == "true"))
