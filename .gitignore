@@ -3,7 +3,6 @@
 **.out
 **.swp
 **.swo
-ycsb_result/*
 run_exp.sh
 outputs/*.json
 config.h
