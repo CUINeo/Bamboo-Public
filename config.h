@@ -40,8 +40,7 @@
 /***********************************************/
 // WAIT_DIE, NO_WAIT, DL_DETECT, TIMESTAMP, MVCC, HEKATON, HSTORE, OCC, VLL, TICTOC, SILO
 // TODO TIMESTAMP does not work at this moment
-#define CC_ALG BAMBOO
-#define ISOLATION_LEVEL 		SERIALIZABLE
+#define CC_ALG IC3
 
 // latch options
 #define LATCH LH_MCSLOCK
