@@ -4,7 +4,6 @@ from test_helper import *
 
 if __name__ == '__main__':
     output_folder = 'ycsb_result'
-    cc_list = ['BAMBOO', 'WOUND_WAIT', 'NO_WAIT', 'WAIT_DIE', 'SILO', 'IC3']
     theta_list = [round(x, 1) for x in list(np.arange(0, 1, 0.1))]
 
     if not os.path.isdir(output_folder):

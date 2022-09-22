@@ -3,7 +3,6 @@ from test_helper import *
 
 if __name__ == '__main__':
     output_folder = 'tpcc_result'
-    cc_list = ['BAMBOO', 'WOUND_WAIT', 'NO_WAIT', 'WAIT_DIE', 'SILO', 'IC3']
     num_wh_list = [1, 2, 4, 8, 16, 32]
 
     if not os.path.isdir(output_folder):

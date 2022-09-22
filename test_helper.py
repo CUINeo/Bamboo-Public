@@ -1,5 +1,8 @@
 import os, re
 
+# MVCC, HEKATON and VLL cannot be compiled successfully right now
+cc_list = ['BAMBOO', 'WOUND_WAIT', 'NO_WAIT', 'WAIT_DIE', 'SILO', 'IC3', 'OCC', 'HSTORE', 'TICTOC']
+
 def replace(filename, pattern, replacement):
     f = open(filename)
     s = f.read()
