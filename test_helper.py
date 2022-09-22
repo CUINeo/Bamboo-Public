@@ -13,7 +13,7 @@ def change_wl(wl):
     f = open('config.h', 'r+')
     for line in f:
         if '#define WORKLOAD' in line:
-            replace('config.h', line, '#define WORKLOAD' + wl + '\n')
+            replace('config.h', line, '#define WORKLOAD ' + wl + '\n')
             break
     f.close()
 
