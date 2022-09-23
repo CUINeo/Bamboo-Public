@@ -148,7 +148,7 @@ def plot_ycsb():
 
 if __name__ == '__main__':
     if len(sys.argv) < 2:
-        # Plot both tpcc and ycsb results
+        # Plot both tpcc and ycsb results.
         plot_tpcc()
         plot_ycsb()
     elif sys.argv[1] == 'tpcc':
