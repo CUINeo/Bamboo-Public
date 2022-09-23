@@ -61,7 +61,7 @@ def plot_tpcc():
 
     # Plot and save the throughput figure.
     _, ax = plt.subplots()
-    ax.set_title('Throughput (' + str(thread) + ') threads')
+    ax.set_title('Throughput (' + str(thread) + ' threads)')
     for cc in cc_list:
         ax.plot(res[cc][0], res[cc][1], label=cc)
     ax.legend()
@@ -71,7 +71,7 @@ def plot_tpcc():
 
     # Plot and save the abort rate figure.
     _, ax = plt.subplots()
-    ax.set_title('Abort rate (' + str(thread) + ') threads')
+    ax.set_title('Abort rate (' + str(thread) + ' threads)')
     for cc in cc_list:
         ax.plot(res[cc][0], res[cc][2], label=cc)
     ax.legend()
@@ -126,7 +126,7 @@ def plot_ycsb():
 
     # Plot and save the throughput figure.
     _, ax = plt.subplots()
-    ax.set_title('Throughput (' + str(thread) + ') threads')
+    ax.set_title('Throughput (' + str(thread) + ' threads)')
     for cc in cc_list:
         ax.plot(res[cc][0], res[cc][1], label=cc)
     ax.legend()
@@ -136,7 +136,7 @@ def plot_ycsb():
 
     # Plot and save the abort rate figure.
     _, ax = plt.subplots()
-    ax.set_title('Abort rate (' + str(thread) + ') threads')
+    ax.set_title('Abort rate (' + str(thread) + ' threads)')
     for cc in cc_list:
         ax.plot(res[cc][0], res[cc][2], label=cc)
     ax.legend()
