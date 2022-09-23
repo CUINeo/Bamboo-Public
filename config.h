@@ -40,7 +40,7 @@
 /***********************************************/
 // WAIT_DIE, NO_WAIT, DL_DETECT, TIMESTAMP, MVCC, HEKATON, HSTORE, OCC, VLL, TICTOC, SILO
 // TODO TIMESTAMP does not work at this moment
-#define CC_ALG TICTOC
+#define CC_ALG BAMBOO
 #define ISOLATION_LEVEL 		SERIALIZABLE
 
 // latch options
@@ -137,7 +137,7 @@
 // ==== [YCSB] ====
 #define INIT_PARALLELISM		40
 #define SYNTH_TABLE_SIZE    10000000
-#define ZIPF_THETA          0.99
+#define ZIPF_THETA          0.95
 #define READ_PERC           0.5
 #define WRITE_PERC 					1  // if want no scan, write + read >= 1
 #define SCAN_PERC 					0

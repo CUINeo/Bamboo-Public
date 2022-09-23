@@ -1,6 +1,21 @@
 import os, re
+import numpy as np
 
-# MVCC, HEKATON and VLL cannot be compiled successfully right now
+# Test setting.
+thread = 16
+
+# TPCC test setting.
+tpcc_output_folder = 'tpcc_result'
+num_wh_list = [1, 2, 4, 8, 16, 32]
+
+# YCSB test setting.
+ycsb_output_folder = 'ycsb_result'
+theta_list = [round(x, 1) for x in list(np.arange(0.5, 1, 0.05))]
+
+# Plot setting.
+figure_folder = 'test_figure'
+
+# MVCC, HEKATON and VLL cannot be compiled successfully right now.
 cc_list = ['BAMBOO', 'WOUND_WAIT', 'NO_WAIT', 'WAIT_DIE', 'SILO', 'IC3', 'OCC', 'HSTORE', 'TICTOC']
 
 def replace(filename, pattern, replacement):
