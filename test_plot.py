@@ -124,8 +124,6 @@ def plot_ycsb():
                     f.close()
                     break
 
-    print(res)
-
     # Plot and save the throughput figure.
     _, ax = plt.subplots()
     ax.set_title('Throughput (' + str(thread) + ' threads)')
