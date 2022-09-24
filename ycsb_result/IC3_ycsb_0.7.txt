@@ -1,0 +1,25 @@
+mem_allocator initialized!
+IC3
+workload initialized!
+Query Queue Init Time 0.795999
+query_queue initialized!
+WARMUP start!
+WARMUP finished!
+PASS! SimTime = 1063103760
+[tid=0] txn_cnt=91765,abort_cnt=0, user_abort_cnt=0
+[tid=1] txn_cnt=91947,abort_cnt=0, user_abort_cnt=0
+[tid=2] txn_cnt=100000,abort_cnt=0, user_abort_cnt=0
+[tid=3] txn_cnt=87482,abort_cnt=0, user_abort_cnt=0
+[tid=4] txn_cnt=90262,abort_cnt=0, user_abort_cnt=0
+[tid=5] txn_cnt=84190,abort_cnt=0, user_abort_cnt=0
+[tid=6] txn_cnt=95616,abort_cnt=0, user_abort_cnt=0
+[tid=7] txn_cnt=84928,abort_cnt=0, user_abort_cnt=0
+[tid=8] txn_cnt=89550,abort_cnt=0, user_abort_cnt=0
+[tid=9] txn_cnt=99990,abort_cnt=0, user_abort_cnt=0
+[tid=10] txn_cnt=88504,abort_cnt=0, user_abort_cnt=0
+[tid=11] txn_cnt=98375,abort_cnt=0, user_abort_cnt=0
+[tid=12] txn_cnt=88132,abort_cnt=0, user_abort_cnt=0
+[tid=13] txn_cnt=90004,abort_cnt=0, user_abort_cnt=0
+[tid=14] txn_cnt=92388,abort_cnt=0, user_abort_cnt=0
+[tid=15] txn_cnt=87616,abort_cnt=0, user_abort_cnt=0
+[summary] throughput=1.37751e+06, txn_cnt= 1460749, abort_cnt= 0, user_abort_cnt= 0, run_time= 16.9669, time_abort= 0, time_cleanup= 0.818847, time_query= 0.0312093, time_get_latch= 0, time_get_cs= 0, time_copy= 0, time_retire_latch= 0, time_retire_cs= 0, time_release_latch= 0, time_release_cs= 0, time_semaphore_cs= 0, time_commit= 0.016448, time_ts_alloc= 0, wait_cnt= 0, latency= 11615, commit_latency= 11615, abort_length= 0, cascading_abort_times= 0, max_abort_length= 0, txn_cnt_long= 0, abort_cnt_long= 0, cascading_abort_cnt= 0, lock_acquire_cnt= 0, lock_directly_cnt= 0, time_wait= 0, time_man= 6.08047, time_index= 0.801684, deadlock_cnt=0, cycle_detect=0, dl_detect_time=0, dl_wait_time=0

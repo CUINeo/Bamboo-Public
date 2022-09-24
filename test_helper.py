@@ -6,11 +6,11 @@ thread = 16
 
 # TPCC test setting.
 tpcc_output_folder = 'tpcc_result'
-num_wh_list = [1, 2, 4, 8, 16, 32]
+num_wh_list = [1, 2, 4, 8, 12, 16, 20, 24, 28, 32]
 
 # YCSB test setting.
 ycsb_output_folder = 'ycsb_result'
-theta_list = [round(x, 1) for x in list(np.arange(0.5, 1, 0.05))]
+theta_list = [round(x, 2) for x in list(np.arange(0.5, 1, 0.05))]
 
 # Plot setting.
 figure_folder = 'test_figure'
