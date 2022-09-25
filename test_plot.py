@@ -130,7 +130,7 @@ def plot_ycsb():
     for cc in cc_list:
         ax.plot(res[cc][0], res[cc][1], label=cc)
     ax.legend()
-    ax.set(xlabel='Warehouse', ylabel='Throughput')
+    ax.set(xlabel='Theta', ylabel='Throughput')
     ax.set_xticks(theta_list)
     figure_name = figure_folder + '/ycsb_' + str(thread) + '_throughput.png'
     plt.savefig(figure_name)
@@ -141,7 +141,7 @@ def plot_ycsb():
     for cc in cc_list:
         ax.plot(res[cc][0], res[cc][2], label=cc)
     ax.legend()
-    ax.set(xlabel='Warehouse', ylabel='Abort rate')
+    ax.set(xlabel='Theta', ylabel='Abort rate')
     ax.set_xticks(theta_list)
     figure_name = figure_folder + '/ycsb_' + str(thread) + '_abort_rate.png'
     plt.savefig(figure_name)
