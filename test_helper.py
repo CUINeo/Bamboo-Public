@@ -10,7 +10,8 @@ num_wh_list = [1, 2, 4, 8, 12, 16, 20, 24, 28, 32]
 
 # YCSB test setting.
 ycsb_output_folder = 'ycsb_result'
-theta_list = [round(x, 2) for x in list(np.arange(0.5, 1, 0.05))]
+theta_list = [round(x, 2) for x in list(np.linspace(0.5, 0.9, 9))]
+theta_list.extend([round(x, 2) for x in list(np.linspace(0.95, 0.99, 5))])
 
 # Plot setting.
 figure_folder = 'test_figure'

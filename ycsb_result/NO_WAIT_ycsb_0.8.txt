@@ -1,25 +1,25 @@
 mem_allocator initialized!
 NO_WAIT
 workload initialized!
-Query Queue Init Time 0.791700
+Query Queue Init Time 0.817580
 query_queue initialized!
 WARMUP start!
 WARMUP finished!
-PASS! SimTime = 1126918498
-[tid=0] txn_cnt=92485,abort_cnt=44661, user_abort_cnt=0
-[tid=1] txn_cnt=86256,abort_cnt=42701, user_abort_cnt=0
-[tid=2] txn_cnt=100000,abort_cnt=49413, user_abort_cnt=0
-[tid=3] txn_cnt=85254,abort_cnt=41466, user_abort_cnt=0
-[tid=4] txn_cnt=86906,abort_cnt=42189, user_abort_cnt=0
-[tid=5] txn_cnt=98771,abort_cnt=49058, user_abort_cnt=0
-[tid=6] txn_cnt=85296,abort_cnt=41581, user_abort_cnt=0
-[tid=7] txn_cnt=87073,abort_cnt=41764, user_abort_cnt=0
-[tid=8] txn_cnt=87743,abort_cnt=43261, user_abort_cnt=0
-[tid=9] txn_cnt=86835,abort_cnt=41641, user_abort_cnt=0
-[tid=10] txn_cnt=85803,abort_cnt=41912, user_abort_cnt=0
-[tid=11] txn_cnt=83657,abort_cnt=41718, user_abort_cnt=0
-[tid=12] txn_cnt=85338,abort_cnt=41307, user_abort_cnt=0
-[tid=13] txn_cnt=93694,abort_cnt=46155, user_abort_cnt=0
-[tid=14] txn_cnt=88247,abort_cnt=42604, user_abort_cnt=0
-[tid=15] txn_cnt=88527,abort_cnt=43645, user_abort_cnt=0
-[summary] throughput=1.26713e+06, txn_cnt= 1421885, abort_cnt= 695076, user_abort_cnt= 0, run_time= 17.954, time_abort= 2.34728, time_cleanup= 0.902545, time_query= 0.101915, time_get_latch= 0, time_get_cs= 0, time_copy= 0, time_retire_latch= 0, time_retire_cs= 0, time_release_latch= 0, time_release_cs= 0, time_semaphore_cs= 0, time_commit= 0, time_ts_alloc= 0, wait_cnt= 0, latency= 28404, commit_latency= 10976, abort_length= 0, cascading_abort_times= 0, max_abort_length= 0, txn_cnt_long= 0, abort_cnt_long= 0, cascading_abort_cnt= 0, lock_acquire_cnt= 0, lock_directly_cnt= 0, time_wait= 0, time_man= 8.12764, time_index= 0.776017, deadlock_cnt=0, cycle_detect=0, dl_detect_time=0, dl_wait_time=0
+PASS! SimTime = 1051111926
+[tid=0] txn_cnt=96995,abort_cnt=46580, user_abort_cnt=0
+[tid=1] txn_cnt=100000,abort_cnt=47864, user_abort_cnt=0
+[tid=2] txn_cnt=89367,abort_cnt=42928, user_abort_cnt=0
+[tid=3] txn_cnt=89599,abort_cnt=43159, user_abort_cnt=0
+[tid=4] txn_cnt=82398,abort_cnt=39208, user_abort_cnt=0
+[tid=5] txn_cnt=86606,abort_cnt=41637, user_abort_cnt=0
+[tid=6] txn_cnt=84462,abort_cnt=40857, user_abort_cnt=0
+[tid=7] txn_cnt=84856,abort_cnt=40725, user_abort_cnt=0
+[tid=8] txn_cnt=82710,abort_cnt=39811, user_abort_cnt=0
+[tid=9] txn_cnt=97143,abort_cnt=45346, user_abort_cnt=0
+[tid=10] txn_cnt=81804,abort_cnt=40102, user_abort_cnt=0
+[tid=11] txn_cnt=83790,abort_cnt=39821, user_abort_cnt=0
+[tid=12] txn_cnt=94203,abort_cnt=44661, user_abort_cnt=0
+[tid=13] txn_cnt=83727,abort_cnt=40296, user_abort_cnt=0
+[tid=14] txn_cnt=83727,abort_cnt=40841, user_abort_cnt=0
+[tid=15] txn_cnt=99432,abort_cnt=47415, user_abort_cnt=0
+[summary] throughput=1.35759e+06, txn_cnt= 1420819, abort_cnt= 681251, user_abort_cnt= 0, run_time= 16.7452, time_abort= 2.18075, time_cleanup= 0.863927, time_query= 0.0866939, time_get_latch= 0, time_get_cs= 0, time_copy= 0, time_retire_latch= 0, time_retire_cs= 0, time_release_latch= 0, time_release_cs= 0, time_semaphore_cs= 0, time_commit= 0, time_ts_alloc= 0, wait_cnt= 0, latency= 26818, commit_latency= 10250, abort_length= 0, cascading_abort_times= 0, max_abort_length= 0, txn_cnt_long= 0, abort_cnt_long= 0, cascading_abort_cnt= 0, lock_acquire_cnt= 0, lock_directly_cnt= 0, time_wait= 0, time_man= 7.49692, time_index= 0.609071, deadlock_cnt=0, cycle_detect=0, dl_detect_time=0, dl_wait_time=0
