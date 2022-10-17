@@ -266,6 +266,8 @@ class txn_man
     // [SILO]
 #elif CC_ALG == SILO
     RC				    validate_silo();
+#elif CC_ALG == DIRTY_OCC
+    RC                  validate_dirty_occ();
 #endif
 
   protected:

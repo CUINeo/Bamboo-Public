@@ -140,9 +140,9 @@ class Row_bamboo {
     BBLockEntry *     remove_descendants(BBLockEntry * en, txn_man * txn);
     void              lock(txn_man * txn);
     void              unlock(txn_man * txn);
-	RC                insert_read_to_retired(BBLockEntry * to_insert, ts_t ts, Access * access);
+	  RC                insert_read_to_retired(BBLockEntry * to_insert, ts_t ts, Access * access);
 #if DEBUG_BAMBOO
-	void              check_correctness();
+	  void              check_correctness();
 #endif
 
     // check priorities

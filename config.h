@@ -38,9 +38,9 @@
 /***********************************************/
 // Concurrency Control
 /***********************************************/
-// WAIT_DIE, NO_WAIT, DL_DETECT, TIMESTAMP, MVCC, HEKATON, HSTORE, OCC, VLL, TICTOC, SILO
+// WAIT_DIE, NO_WAIT, DL_DETECT, TIMESTAMP, MVCC, HEKATON, HSTORE, OCC, VLL, TICTOC, SILO, DIRTY_OCC
 // TODO TIMESTAMP does not work at this moment
-#define CC_ALG TICTOC
+#define CC_ALG DIRTY_OCC
 #define ISOLATION_LEVEL 		SERIALIZABLE
 
 // latch options

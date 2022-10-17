@@ -38,6 +38,7 @@ class Row_ww;
 class Row_bamboo;
 //class Row_bamboo_pt;
 class Row_ic3;
+class Row_dirty_occ
 #if CC_ALG == WOUND_WAIT || CC_ALG == WAIT_DIE || CC_ALG == NO_WAIT || CC_ALG == DL_DETECT
 struct LockEntry;
 #elif CC_ALG == BAMBOO
@@ -97,6 +98,9 @@ class row_t
     void free_row();
 
     // for concurrency control. can be lock, timestamp etc.
+#if CC_ALG == DIRTY_OCC
+    row_t * stashed;
+#endif
 #if CC_ALG == BAMBOO
     RC retire_row(BBLockEntry * lock_entry);
 #elif CC_ALG == IC3
@@ -119,24 +123,26 @@ class row_t
     Row_lock * manager;
 #elif CC_ALG == TIMESTAMP
     Row_ts * manager;
-  #elif CC_ALG == MVCC
+#elif CC_ALG == MVCC
   	Row_mvcc * manager;
-  #elif CC_ALG == HEKATON
+#elif CC_ALG == HEKATON
   	Row_hekaton * manager;
-  #elif CC_ALG == OCC
+#elif CC_ALG == OCC
   	Row_occ * manager;
-  #elif CC_ALG == TICTOC
+#elif CC_ALG == TICTOC
   	Row_tictoc * manager;
-  #elif CC_ALG == SILO
+#elif CC_ALG == SILO
   	Row_silo * manager;
-  #elif CC_ALG == VLL
+#elif CC_ALG == VLL
   	Row_vll * manager;
-  #elif CC_ALG == WOUND_WAIT
+#elif CC_ALG == WOUND_WAIT
   	Row_ww * manager;
-  #elif CC_ALG == BAMBOO
+#elif CC_ALG == BAMBOO
 	Row_bamboo * manager;
-  #elif CC_ALG == IC3
+#elif CC_ALG == IC3
 	Row_ic3 * manager;
+#elif CC_ALG == DIRTY_OCC
+    Row_dirty_occ * manager;
 #endif
     char * data;
     table_t * table;
