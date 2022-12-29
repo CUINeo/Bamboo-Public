@@ -38,7 +38,7 @@ class Row_ww;
 class Row_bamboo;
 //class Row_bamboo_pt;
 class Row_ic3;
-class Row_dirty_occ
+class Row_dirty_occ;
 #if CC_ALG == WOUND_WAIT || CC_ALG == WAIT_DIE || CC_ALG == NO_WAIT || CC_ALG == DL_DETECT
 struct LockEntry;
 #elif CC_ALG == BAMBOO
@@ -98,9 +98,6 @@ class row_t
     void free_row();
 
     // for concurrency control. can be lock, timestamp etc.
-#if CC_ALG == DIRTY_OCC
-    row_t * stashed;
-#endif
 #if CC_ALG == BAMBOO
     RC retire_row(BBLockEntry * lock_entry);
 #elif CC_ALG == IC3

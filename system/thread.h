@@ -6,7 +6,7 @@ class workload;
 class base_query;
 
 class thread_t {
-  public:
+public:
     uint64_t _thd_id;
     workload * _wl;
 
@@ -28,8 +28,7 @@ class thread_t {
     ts_t 		get_next_ts();
     ts_t 		get_next_n_ts(int n);
 
-
-  private:
+private:
     uint64_t 	_host_cid;
     uint64_t 	_cur_cid;
     ts_t 		_curr_ts;
@@ -43,9 +42,9 @@ class thread_t {
 
     // A restart buffer for aborted txns.
     struct AbortBufferEntry	{
-        ts_t ready_time;
-        base_query * query;
-        ts_t starttime;
+		ts_t ready_time;
+		base_query * query;
+		ts_t starttime;
     };
     AbortBufferEntry * _abort_buffer;
     int _abort_buffer_size;

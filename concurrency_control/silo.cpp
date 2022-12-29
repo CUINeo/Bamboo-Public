@@ -141,8 +141,7 @@ final:
 	} else {
 		for (int i = 0; i < wr_cnt; i++) {
 			Access * access = accesses[ write_set[i] ];
-			access->orig_row->manager->write( 
-				access->data, _cur_tid );
+			access->orig_row->manager->write( access->data, _cur_tid );
 			accesses[ write_set[i] ]->orig_row->manager->release();
 		}
 		cleanup(rc);

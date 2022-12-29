@@ -62,13 +62,15 @@ RC thread_t::run() {
 		ts_t starttime = get_sys_clock();
 		if (WORKLOAD != TEST) {
 			if (_abort_buffer_enable) {
-                while(true) {
+                while (true) {
 					m_query = NULL;
 					ts_t curr_time = get_sys_clock();
 					ts_t min_ready_time = UINT64_MAX;
 					if (_abort_buffer_empty_slots < _abort_buffer_size) {
+						// Abort buffer is not empty
 						for (int i = 0; i < _abort_buffer_size; i++) {
 							if (_abort_buffer[i].query != NULL && curr_time > _abort_buffer[i].ready_time) {
+								// i-th query in abort buffer is ready to run
 								m_query = _abort_buffer[i].query;
                                 m_query->rerun = true;
 								txn_starttime = _abort_buffer[i].starttime;
@@ -77,13 +79,16 @@ RC thread_t::run() {
 								break;
 							} else if (_abort_buffer_empty_slots == 0
 					          		&& _abort_buffer[i].ready_time < min_ready_time)
+								// Update min_ready_time if abort buffer is full
 								min_ready_time = _abort_buffer[i].ready_time;
-							}
+						}
 				    }
 					if (m_query == NULL && _abort_buffer_empty_slots == 0) {
+						// No runnable query from abort buffer and abort buffer is full. Sleep until min_ready_time
 						M_ASSERT(min_ready_time >= curr_time, "min_ready_time=%ld, curr_time=%ld\n", min_ready_time, curr_time);
-						usleep((min_ready_time - curr_time)/1000); 
+						usleep((min_ready_time - curr_time)/1000);
 					} else if (m_query == NULL) {
+						// No runnable query from abort buffer and abort buffer is not full. Get next query to run
 						m_query = query_queue->get_next_query( _thd_id );
                         m_query->rerun = false;
                         m_txn->abort_cnt = 0;
@@ -94,6 +99,7 @@ RC thread_t::run() {
 #endif
 					}
 					if (m_query)
+						// m_query runnable, break to run it
 						break;
 				}
 			} else {
@@ -116,7 +122,7 @@ RC thread_t::run() {
 
 #if (CC_ALG == WOUND_WAIT) && !WW_STARV_FREE
 		m_txn->set_ts(get_next_ts());
-#elif (CC_ALG == BAMBOO)
+#elif CC_ALG == BAMBOO
 		m_txn->set_ts(0);
 #elif CC_ALG == WAIT_DIE || (CC_ALG == WOUND_WAIT && WW_STARV_FREE)
         // used for after warmup, since aborted txn keeps original ts
@@ -171,7 +177,7 @@ RC thread_t::run() {
 
 		if (rc == Abort) {
 			uint64_t penalty = 0;
-			if (ABORT_PENALTY != 0)  {
+			if (ABORT_PENALTY != 0) {
 				double r;
 				drand48_r(&buffer, &r);
 				penalty = r * ABORT_PENALTY;
@@ -268,7 +274,6 @@ RC thread_t::run() {
 	}
 	assert(false);
 }
-
 
 ts_t
 thread_t::get_next_n_ts(int n) {

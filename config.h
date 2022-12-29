@@ -89,7 +89,7 @@
 #define WR_VALIDATION_SEPARATE	true
 #define WRITE_PERMISSION_LOCK		false
 #define ATOMIC_TIMESTAMP		"false"
-// [TICTOC, SILO]
+// [TICTOC, SILO, DIRTY_OCC]
 #define VALIDATION_LOCK			"no-wait" // no-wait or waiting
 #define PRE_ABORT					  "true"
 #define ATOMIC_WORD					true
@@ -113,6 +113,8 @@
 #define IC3_RENDEZVOUS      true
 #define IC3_FIELD_LOCKING   false // should not be true
 #define IC3_MODIFIED_TPCC   false
+// [DIRTY_OCC]
+#define DR_THRESHOLD        100000
 
 /***********************************************/
 // Logging
@@ -267,6 +269,7 @@ extern TestCases					  g_test_case;
 #define WOUND_WAIT          12
 #define BAMBOO              13
 #define IC3                 14
+#define DIRTY_OCC           15
 //Isolation Levels
 #define SERIALIZABLE				1
 #define SNAPSHOT					  2

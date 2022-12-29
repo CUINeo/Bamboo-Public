@@ -16,7 +16,7 @@ public:
     bool rerun;
 };
 
-// All the querise for a particular thread.
+// All the queries for a particular thread.
 class Query_thd {
 public:
 	void init(workload * h_wl, int thread_id);

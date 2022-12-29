@@ -41,8 +41,9 @@ int main(int argc, char* argv[])
 	printf("SILO\n");
 #elif CC_ALG == IC3
 	printf("IC3\n");
+#elif CC_ALG == DIRTY_OCC
+	printf("DIRTY_OCC\n");
 #endif
-	
  
 	workload * m_wl;
 	switch (WORKLOAD) {

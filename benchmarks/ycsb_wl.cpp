@@ -115,12 +115,8 @@ void * ycsb_wl::init_table_slice() {
 	while ((UInt32)ATOM_FETCH_ADD(next_tid, 0) < g_init_parallelism) {}
 	assert((UInt32)ATOM_FETCH_ADD(next_tid, 0) == g_init_parallelism);
 	uint64_t slice_size = g_synth_table_size / g_init_parallelism;
-	for (uint64_t key = slice_size * tid; 
-			key < slice_size * (tid + 1); 
-			key ++
-	) {
+	for (uint64_t key = slice_size * tid; key < slice_size * (tid + 1); key ++) {
 		row_t * new_row = NULL;
-		//zhihan uint64_t row_id;
 		uint64_t row_id = get_sys_clock();
 		int part_id = key_to_part(key);
         #ifdef NDEBUG

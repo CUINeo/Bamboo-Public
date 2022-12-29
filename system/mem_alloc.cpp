@@ -120,9 +120,9 @@ mem_alloc::get_size_id(UInt32 size) {
 		if (size <= BlockSizes[i]) 
 			return i;
 	}
-    printf("size = %d\n", size);
+	printf("size = %d\n", size);
 	assert( false );
-    return 0;
+	return 0;
 }
 
 
@@ -145,8 +145,8 @@ void mem_alloc::free(void * ptr, uint64_t size) {
 // cause trouble)
 void * mem_alloc::alloc(uint64_t size, uint64_t part_id) {
 	void * ptr;
-    if (size > BlockSizes[SizeNum - 1])
-        ptr = malloc(size);
+	if (size > BlockSizes[SizeNum - 1])
+		ptr = malloc(size);
 	else if (THREAD_ALLOC && (warmup_finish || enable_thread_mem_pool)) {
 		int arena_id = get_arena_id();
 		int size_id = get_size_id(size);
