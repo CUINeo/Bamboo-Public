@@ -371,7 +371,7 @@ RC row_t::get_row(access_t type, txn_man * txn, row_t *& row, Access * access) {
 #elif CC_ALG == TICTOC || CC_ALG == SILO || CC_ALG == DIRTY_OCC
 	// like OCC, tictoc also makes a local copy for each read/write
 	row->table = get_table();
-	TsType ts_type = (type == RD)? R_REQ : P_REQ; 
+	TsType ts_type = (type == RD)? R_REQ : P_REQ;
 	rc = this->manager->access(txn, ts_type, row);
 	return rc;
 #elif CC_ALG == HSTORE || CC_ALG == VLL
