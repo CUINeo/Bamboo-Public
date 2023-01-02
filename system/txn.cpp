@@ -281,6 +281,7 @@ row_t * txn_man::get_row(row_t * row, access_t type) {
 	}
 	//printf("txn-%lu access(%p) row %p at access[%d]\n", txn_id, accesses[row_cnt], row , row_cnt);
 #if (CC_ALG == WOUND_WAIT) || (CC_ALG == BAMBOO)
+	// Assign the orig_row field to contain the row
 	rc = row->get_row(type, this, accesses[ row_cnt ]->orig_row, accesses[row_cnt]);
 	if (rc == Abort) {
 		accesses[row_cnt]->orig_row = NULL;
@@ -362,7 +363,7 @@ row_t * txn_man::get_row(row_t * row, access_t type) {
 	uint64_t timespan = get_sys_clock() - starttime;
 	INC_TMP_STATS(get_thd_id(), time_man, timespan);
 
-#if  (CC_ALG == WOUND_WAIT)
+#if (CC_ALG == WOUND_WAIT)
 	if (type == WR)
 		return accesses[row_cnt - 1]->data;
 	else
