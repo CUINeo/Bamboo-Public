@@ -92,7 +92,6 @@ RC ycsb_txn_man::run_txn(base_query * query) {
                 } 
             }
 
-
             iteration ++;
             if (req->rtype == RD || req->rtype == WR || iteration == req->scan_len)
                 finish_req = true;

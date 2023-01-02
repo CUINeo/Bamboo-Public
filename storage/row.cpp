@@ -445,7 +445,7 @@ void row_t::return_row(access_t type, txn_man * txn, row_t * row) {
 	row->free_row();
 	mem_allocator.free(row, sizeof(row_t));
 	return;
-#elif CC_ALG == TICTOC || CC_ALG == SILO
+#elif CC_ALG == TICTOC || CC_ALG == SILO || CC_ALG == DIRTY_OCC
 	assert (row != NULL);
 	return;
 #elif CC_ALG == HSTORE || CC_ALG == VLL
