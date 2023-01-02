@@ -24,7 +24,7 @@ public:
 	void init(uint64_t thd_id, workload * h_wl) { assert(false); };
 	void init(uint64_t thd_id, workload * h_wl, Query_thd * query_thd);
 	static void calculateDenom();
-  uint64_t get_new_row();
+  	uint64_t get_new_row();
 	void gen_requests(uint64_t thd_id, workload * h_wl);
 
 	uint64_t request_cnt;
