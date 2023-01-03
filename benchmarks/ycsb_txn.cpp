@@ -13,6 +13,7 @@
 #include "row_lock.h"
 #include "row_ts.h"
 #include "row_mvcc.h"
+#include "row_dirty_occ.h"
 #include "mem_alloc.h"
 #include "query.h"
 
@@ -88,6 +89,16 @@ RC ycsb_txn_man::run_txn(base_query * query) {
                         char * data = row->get_data();
 #endif
                         *(uint64_t *)(&data[fid * 10]) = 0;
+#if CC_ALG == DIRTY_OCC && DIRTY_WRITE
+                        // If the row is a hotspot, perform a dirty read
+                        if (row->manager->is_hotspot()) {
+                            row_t * tmp_row = (row_t *) _mm_malloc(sizeof(row_t), 64);
+                            tmp_row->init(MAX_TUPLE_SIZE);
+                            tmp_row->copy(row_local);
+                            tmp_row->table = row_local->get_table();
+                            row->manager->dirty_write(tmp_row, _tid);
+                        }
+#endif
 //					}
                 } 
             }

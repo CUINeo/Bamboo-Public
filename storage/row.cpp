@@ -137,7 +137,7 @@ void row_t::set_value(int id, void * ptr, int size) {
 	if (txn_access)
 		txn_access->wr_accesses = (txn_access->wr_accesses | (1UL << id));
 #endif
-	memcpy( &data[pos], ptr, size);
+	memcpy(&data[pos], ptr, size);
 	//debugging
 	assert(data);
 	assert(ptr);
@@ -202,6 +202,7 @@ void row_t::set_data(char * data, uint64_t size) {
 	assert(data);
 	assert(this->data);
 }
+
 // copy from the src to this
 void row_t::copy(row_t * src) {
 	set_data(src->get_data(), src->get_tuple_size());

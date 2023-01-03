@@ -114,7 +114,8 @@
 #define IC3_FIELD_LOCKING   false // should not be true
 #define IC3_MODIFIED_TPCC   false
 // [DIRTY_OCC]
-#define DR_THRESHOLD        100000
+#define DR_THRESHOLD        10000
+#define DIRTY_WRITE         false
 
 /***********************************************/
 // Logging
@@ -139,7 +140,7 @@
 // ==== [YCSB] ====
 #define INIT_PARALLELISM		40
 #define SYNTH_TABLE_SIZE    10000000
-#define ZIPF_THETA          0.9
+#define ZIPF_THETA          0.99
 #define READ_PERC           0.5
 #define WRITE_PERC 					1  // if want no scan, write + read >= 1
 #define SCAN_PERC 					0

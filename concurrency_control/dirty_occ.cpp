@@ -99,7 +99,6 @@ final:
     } else {
         for (int i = 0; i < wr_cnt; i++) {
             Access * access = accesses[write_set[i]];
-            // printf("%ld\n", (access->orig_row->manager->_tid & LOCK_BIT) >> 63);
             access->orig_row->manager->write(access->data, _tid);
             access->orig_row->manager->release();
         }
