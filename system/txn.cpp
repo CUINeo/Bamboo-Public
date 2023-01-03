@@ -380,13 +380,6 @@ row_t * txn_man::get_row(row_t * row, access_t type) {
 	}
 #elif CC_ALG == IC3
   	return accesses[row_cnt - 1]->data;
-#elif CC_ALG == DIRTY_OCC
-	if (type == WR && accesses[row_cnt - 1]->orig_row->manager->_temp >= DR_THRESHOLD) {
-		// Facilitate dirty writes to hotspots
-		return accesses[row_cnt - 1]->orig_row;
-	} else {
-		return accesses[row_cnt - 1]->data;
-	}
 #else
   	return accesses[row_cnt - 1]->data;
 #endif

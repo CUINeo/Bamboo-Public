@@ -35,7 +35,6 @@ row_t::init(table_t * host_table, uint64_t part_id, uint64_t row_id) {
 	return RCOK;
 }
 
-
 #if CC_ALG == IC3
 void
 row_t::init_accesses(Access * access) {
@@ -54,7 +53,6 @@ row_t::switch_schema(table_t * host_table) {
 	this->table = host_table;
 	return RCOK;
 }
-
 
 void row_t::init_manager(row_t * row) {
 #if CC_ALG == DL_DETECT || CC_ALG == NO_WAIT || CC_ALG == WAIT_DIE

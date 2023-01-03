@@ -82,7 +82,7 @@ RC ycsb_txn_man::run_txn(base_query * query) {
                     assert(req->rtype == WR);
 //					for (int fid = 0; fid < schema->get_field_cnt(); fid++) {
                         int fid = 0;
-#if (CC_ALG == BAMBOO) || (CC_ALG == WOUND_WAIT)
+#if (CC_ALG == BAMBOO) || (CC_ALG == WOUND_WAIT) || (CC_ALG == DIRTY_OCC) || (CC_ALG == SILO) || (CC_ALG == TICTOC) || (CC_ALG == OCC)
                         char * data = row_local->get_data();
 #else
                         char * data = row->get_data();

@@ -18,7 +18,7 @@ struct BBLockEntry;
 // each thread has a txn_man. 
 // a txn_man corresponds to a single transaction.
 
-//For VLL
+// For VLL
 enum TxnType {VLL_Blocked, VLL_Free};
 
 class Access {
