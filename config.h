@@ -114,8 +114,7 @@
 #define IC3_FIELD_LOCKING   false // should not be true
 #define IC3_MODIFIED_TPCC   false
 // [DIRTY_OCC]
-#define DR_THRESHOLD        10000
-#define DIRTY_WRITE         false
+#define DR_THRESHOLD        30
 
 /***********************************************/
 // Logging

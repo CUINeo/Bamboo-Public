@@ -48,8 +48,6 @@ class Access {
 	uint64_t  	rd_accesses;
 	uint64_t  	wr_accesses;
 	uint64_t  	lk_accesses;
-#elif CC_ALG == DIRTY_OCC
-	ts_t		tid;
 #endif
 #if COMMUTATIVE_OPS
 	// support increment-only for now
@@ -152,7 +150,6 @@ class txn_man
 	// [DIRTY_OCC]
 #elif CC_ALG == DIRTY_OCC
 	ts_t				last_tid;
-	ts_t				_tid;
 	bool				_validation_no_wait;
 	// [IC3]
 #elif CC_ALG == IC3

@@ -136,8 +136,6 @@ typedef uint64_t txn_t;
 typedef uint64_t rid_t; // row id
 typedef uint64_t pgid_t; // page id
 
-
-
 /* INDEX */
 enum latch_t {LATCH_EX, LATCH_SH, LATCH_NONE};
 // accessing type determines the latch type on nodes

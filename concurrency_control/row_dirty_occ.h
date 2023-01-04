@@ -36,6 +36,7 @@ private:
     row_t *             _row;
     row_t *             _stashed_row;
     uint64_t            _temp;
+    pthread_mutex_t *   _latch;
 };
 
 #endif

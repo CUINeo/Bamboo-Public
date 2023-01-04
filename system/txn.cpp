@@ -60,9 +60,6 @@ void txn_man::init(thread_t * h_thd, workload * h_wl, uint64_t thd_id) {
 		depqueue[i] = NULL;
 	depqueue_sz = 0;
 	piece_starttime = 0;
-#elif CC_ALG == DIRTY_OCC
-	// Initialize the tid for a transaction
-	_tid = txn_id;
 #endif
 }
 

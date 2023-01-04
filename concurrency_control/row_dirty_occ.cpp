@@ -14,6 +14,9 @@ void Row_dirty_occ::init(row_t * row) {
     _row = row;
     _stashed_row = NULL;
     _temp = 0;
+
+    _latch = (pthread_mutex_t *) _mm_malloc(sizeof(pthread_mutex_t), 64);
+    pthread_mutex_init(_latch, NULL);
 }
 
 // This function performs a dirty read or a clean read depending on the temperature
@@ -21,10 +24,19 @@ RC Row_dirty_occ::access(txn_man * txn, TsType type, row_t * local_row) {
     if (_temp >= DR_THRESHOLD && _stashed_row) {
         // Dirty read
         // Read the latest uncommitted data
-        lock_stashed();
-        local_row->copy(_stashed_row);
-        txn->last_tid = _stashed_tid;
-        release_stashed();
+        ts_t v = 0;
+        ts_t v2 = 1;
+        while (v2 != v) {
+            v = _stashed_tid;
+            while (v & LOCK_BIT) {
+                PAUSE
+                v = _stashed_tid;
+            }
+            local_row->copy(_stashed_row);
+            COMPILER_BARRIER
+            v2 = _stashed_tid;
+        }
+        txn->last_tid = v & (~LOCK_BIT);
     } else {
         // Clean read
         // Read the latest committed data
