@@ -63,7 +63,7 @@ RC txn_man::validate_dirty_occ() {
             row_t * row = accesses[write_set[i]]->orig_row;
             row->manager->lock();
             num_locks++;
-            if (row->manager->get_tid() != accesses[write_set[i]]->tid) {
+            if (!row->manager->validate(accesses[write_set[i]]->tid, true)) {
                 rc = Abort;
                 goto final;
             }

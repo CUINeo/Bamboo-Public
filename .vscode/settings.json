@@ -12,6 +12,8 @@
         "new": "cpp",
         "streambuf": "cpp",
         "memory_resource": "cpp",
-        "memory": "cpp"
+        "memory": "cpp",
+        "functional": "cpp",
+        "ranges": "cpp"
     }
 }
