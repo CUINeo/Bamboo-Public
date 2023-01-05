@@ -1,5 +1,6 @@
-#include <random>
 #include <cmath>
+#include <ctime>
+#include <random>
 #include "txn.h"
 #include "row.h"
 #include "row_dirty_occ.h"
@@ -14,9 +15,7 @@ void Row_dirty_occ::init(row_t * row) {
     _row = row;
     _stashed_row = NULL;
     _temp = 0;
-
-    _latch = (pthread_mutex_t *) _mm_malloc(sizeof(pthread_mutex_t), 64);
-    pthread_mutex_init(_latch, NULL);
+    _rdm.init(time(NULL));
 }
 
 // This function performs a dirty read or a clean read depending on the temperature
@@ -60,7 +59,7 @@ RC Row_dirty_occ::access(txn_man * txn, TsType type, row_t * local_row) {
 // This function increments the current temperature by possibility of 1/2^(_temp)
 void Row_dirty_occ::inc_temp() {
     // TODO: implement more efficient probability algorithm
-    if ((double)rand() / RAND_MAX <= 1 / pow(2, _temp)) {
+    if ((double)_rdm.next() / RAND_MAX <= 1 / pow(2, _temp)) {
         uint64_t temp = _temp;
         while (!__sync_bool_compare_and_swap(&_temp, temp, temp + 1)) {
             PAUSE

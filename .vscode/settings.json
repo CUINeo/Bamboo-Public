@@ -14,6 +14,8 @@
         "memory_resource": "cpp",
         "memory": "cpp",
         "functional": "cpp",
-        "ranges": "cpp"
+        "ranges": "cpp",
+        "cstdlib": "cpp",
+        "algorithm": "cpp"
     }
 }
