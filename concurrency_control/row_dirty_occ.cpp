@@ -18,26 +18,19 @@ void Row_dirty_occ::init(row_t * row) {
     _rdm.init(time(NULL));
 }
 
-// This function performs a dirty read or a clean read depending on the temperature
+// This function performs a dirty access or a clean access depending on the temperature
 RC Row_dirty_occ::access(txn_man * txn, TsType type, row_t * local_row) {
     if (unlikely(_temp >= DR_THRESHOLD && _stashed_row)) {
-        // Dirty read
-        // Read the latest uncommitted data
-        ts_t v = 0;
-        ts_t v2 = 1;
-        while (v2 != v) {
-            v = _stashed_tid;
-            while (v & LOCK_BIT) {
-                PAUSE
-                v = _stashed_tid;
-            }
+        // // Dirty access
+        // // Read the latest uncommitted data
+        lock_stashed();
+        if (_stashed_row) {
             local_row->copy(_stashed_row);
-            COMPILER_BARRIER
-            v2 = _stashed_tid;
+            txn->last_tid = _stashed_tid & (~LOCK_BIT);
         }
-        txn->last_tid = v & (~LOCK_BIT);
+        release_stashed();
     } else {
-        // Clean read
+        // Clean access
         // Read the latest committed data
         ts_t v = 0;
         ts_t v2 = 1;
@@ -109,6 +102,19 @@ void Row_dirty_occ::write(row_t * data, ts_t tid) {
 	M_ASSERT(v & LOCK_BIT, "tid=%ld, v & LOCK_BIT=%ld, v & (~LOCK_BIT)=%ld\n",
             tid, (v & LOCK_BIT), (v & (~LOCK_BIT)));
     _tid = (tid | LOCK_BIT);
+}
+
+// This function clears the stashed version if the tid matches
+void Row_dirty_occ::clear_stashed(ts_t tid) {
+    if (_stashed_row && tid == (_stashed_tid & (~LOCK_BIT))) {
+        lock_stashed();
+        if (_stashed_row && tid == (_stashed_tid & (~LOCK_BIT))) {
+            mem_allocator.free(_stashed_row, sizeof(row_t));
+            _stashed_row = NULL;
+            _stashed_tid = LOCK_BIT;
+        }
+        release_stashed();
+    }
 }
 
 void Row_dirty_occ::lock() {

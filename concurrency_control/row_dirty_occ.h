@@ -18,6 +18,8 @@ public:
     void                dirty_write(row_t * data, ts_t tid);
     void                write(row_t * data, ts_t tid);
 
+    void                clear_stashed(ts_t tid);
+
     bool                is_hotspot() { return _temp >= DR_THRESHOLD; }
 
     void                lock();

@@ -85,6 +85,13 @@ final:
         for (int i = 0; i < num_locks; i++) {
             accesses[write_set[i]]->orig_row->manager->release();
         }
+        // Clear all dirty writes
+        for (int i = 0; i < wr_cnt; i++) {
+            Access * access = accesses[write_set[i]];
+            if (access->orig_row->manager->is_hotspot()) {
+                access->orig_row->manager->clear_stashed(txn_id);
+            }
+        }
         cleanup(rc);
     } else {
         for (int i = 0; i < wr_cnt; i++) {
