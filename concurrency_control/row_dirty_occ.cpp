@@ -21,8 +21,8 @@ void Row_dirty_occ::init(row_t * row) {
 // This function performs a dirty access or a clean access depending on the temperature
 RC Row_dirty_occ::access(txn_man * txn, TsType type, row_t * local_row) {
     if (unlikely(_temp >= DR_THRESHOLD && _stashed_row)) {
-        // // Dirty access
-        // // Read the latest uncommitted data
+        // Dirty access
+        // Read the latest uncommitted data
         lock_stashed();
         if (_stashed_row) {
             local_row->copy(_stashed_row);
@@ -67,16 +67,21 @@ bool Row_dirty_occ::validate(ts_t tid, bool in_write_set) {
     if (in_write_set) {
         // If the row is in the write set, then the row has already been locked
         // TODO: figure out why transactions with dirty write cannot commit
-        bool ret = (tid == (v & (~LOCK_BIT)));
-        if (ret == false) {
+        if (tid != (v & (~LOCK_BIT))) {
+            abort_cnt_write_mismatch++;
             inc_temp();
+            return false;
+        } else {
+            return true;
         }
-        return ret;
     }
-    if (v & LOCK_BIT) {
+    if ((_temp < DR_THRESHOLD) && (v & LOCK_BIT)) {
+        // For read set validation on non-hotspot, abort if the tuple is now locked
+        abort_cnt_read_locked++;
         inc_temp();
         return false;
     } else if (tid != (v & (~LOCK_BIT))) {
+        abort_cnt_read_mismatch++;
         inc_temp();
         return false;
     }

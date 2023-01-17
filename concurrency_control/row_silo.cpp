@@ -47,13 +47,18 @@ bool
 Row_silo::validate(ts_t tid, bool in_write_set) {
 #if ATOMIC_WORD
 	uint64_t v = _tid_word;
-	if (in_write_set)
+	if (in_write_set) {
 		return tid == (v & (~LOCK_BIT));
+	}
 
-	if (v & LOCK_BIT) 
+	if (v & LOCK_BIT) {
+		abort_cnt_read_locked_silo++;
 		return false;
-	else if (tid != (v & (~LOCK_BIT)))
+	}
+	else if (tid != (v & (~LOCK_BIT))) {
+		abort_cnt_read_mismatch_silo++;
 		return false;
+	}
 	else 
 		return true;
 #else

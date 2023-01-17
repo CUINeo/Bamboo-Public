@@ -126,7 +126,7 @@ uint64_t table_size = g_synth_table_size / g_virtual_part_cnt;
 	uint64_t rid = 0;
 	uint64_t tmp;
 	for (tmp = 0; tmp < local_req_per_query; tmp ++) {		
-	assert(tmp == rid);
+		assert(tmp == rid);
 		ycsb_request * req = &requests[rid];
 		// the request will access part_id.
 		//uint64_t ith = tmp * part_num / g_req_per_query;

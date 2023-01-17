@@ -94,6 +94,19 @@ extern UInt32 g_ts_batch_num;
 
 extern map<string, string> g_params;
 
+// Debug (DIRTY_OCC)
+extern int abort_cnt_write_set;
+extern int abort_cnt_read_set;
+extern int abort_cnt_write_mismatch;
+extern int abort_cnt_read_locked;
+extern int abort_cnt_read_mismatch;
+
+// Debug (SILO)
+extern int abort_cnt_write_set_silo;
+extern int abort_cnt_read_set_silo;
+extern int abort_cnt_read_locked_silo;
+extern int abort_cnt_read_mismatch_silo;
+
 // YCSB
 extern UInt32 g_cc_alg;
 extern ts_t g_query_intvl;
@@ -157,7 +170,6 @@ enum status_t: unsigned int {RUNNING, ABORTED, COMMITED, HOLDING};
 
 /* COMMUTATIVE OPERATIONS */
 enum com_t {COM_INC, COM_DEC, COM_NONE};
-
 
 #define MSG(str, args...) { \
 	printf("[%s : %d] " str, __FILE__, __LINE__, args); } \

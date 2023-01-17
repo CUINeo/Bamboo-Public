@@ -4,6 +4,10 @@ import numpy as np
 # Test setting.
 thread = 16
 
+# DIRTY_OCC DELTA test setting.
+delta_output_folder = 'delta_result'
+delta_list = np.arange(0, 1.1, 0.1)
+
 # TPCC test setting.
 tpcc_output_folder = 'tpcc_result'
 num_wh_list = [1, 2, 4, 8, 12, 16, 20, 24, 28, 32]
@@ -33,6 +37,14 @@ def change_wl(wl):
     for line in f:
         if '#define WORKLOAD' in line:
             replace('config.h', line, '#define WORKLOAD ' + wl + '\n')
+            break
+    f.close()
+
+def change_delta(delta):
+    f = open('config.h', 'r+')
+    for line in f:
+        if '#define DELTA' in line:
+            replace('config.h', line, '#define DELTA ' + str(delta) + '\n')
             break
     f.close()
 
@@ -69,6 +81,9 @@ def compile():
         exit(0)
     else:
         os.system('rm -f temp.out')
+
+def execute(output):
+    os.system('./rundb > ' + output + ' 2>&1')
 
 def ycsb_execute(theta, output):
     os.system('./rundb -z' + str(theta) + ' > ' + output + ' 2>&1')

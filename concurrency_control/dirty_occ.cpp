@@ -31,7 +31,7 @@ RC txn_man::validate_dirty_occ() {
         }
     }
 
-	// Lock tuples in the write set in the primary key order
+	// Lock tuples in the lock set in the primary key order
     int num_locks = 0;
     bool done = false;
     if (_validation_no_wait) {
@@ -45,6 +45,7 @@ RC txn_man::validate_dirty_occ() {
                 row->manager->assert_lock();
                 num_locks++;
                 if (!row->manager->validate(accesses[write_set[i]]->tid, true)) {
+                    abort_cnt_write_set++;
                     rc = Abort;
                     goto final;
                 }
@@ -73,8 +74,8 @@ RC txn_man::validate_dirty_occ() {
 	// Validate tuples in the read set
     for (int i = 0; i < row_cnt - wr_cnt; i++) {
         Access * access = accesses[read_set[i]];
-        bool success = access->orig_row->manager->validate(access->tid, false);
-        if (!success) {
+        if (!access->orig_row->manager->validate(access->tid, false)) {
+            abort_cnt_read_set++;
             rc = Abort;
             goto final;
         }
@@ -96,8 +97,10 @@ final:
     } else {
         for (int i = 0; i < wr_cnt; i++) {
             Access * access = accesses[write_set[i]];
-            // Use txn_id to distinguish between different transactions
-            access->orig_row->manager->write(access->data, txn_id);
+            if (access->type == WR) {
+                // Use txn_id to distinguish among different transactions
+                access->orig_row->manager->write(access->data, txn_id);
+            }
             access->orig_row->manager->release();
         }
         cleanup(rc);

@@ -17,7 +17,6 @@ Query_queue::init(workload * h_wl) {
 	all_queries = new Query_thd * [g_thread_cnt];
 	_wl = h_wl;
 	_next_tid = 0;
-	
 
 #if WORKLOAD == YCSB	
 	ycsb_query::calculateDenom();
@@ -64,7 +63,6 @@ Query_queue::threadInitQuery(void * This) {
 //     class Query_thd
 /*************************************************/
 
-
 void 
 Query_thd::init(workload * h_wl, int thread_id) {
 	q_idx = 0;
@@ -102,7 +100,6 @@ Query_thd::init(workload * h_wl, int thread_id) {
 #endif
 	}
 }
-
 
 base_query * 
 Query_thd::get_next_query() {

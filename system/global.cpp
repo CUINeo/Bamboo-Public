@@ -70,6 +70,19 @@ char * output_file = NULL;
 
 map<string, string> g_params;
 
+// Debug (DIRTY_OCC)
+int abort_cnt_write_set = 0;
+int abort_cnt_read_set = 0;
+int abort_cnt_write_mismatch = 0;
+int abort_cnt_read_locked = 0;
+int abort_cnt_read_mismatch = 0;
+
+// Debug (SILO)
+int abort_cnt_write_set_silo = 0;
+int abort_cnt_read_set_silo = 0;
+int abort_cnt_read_locked_silo = 0;
+int abort_cnt_read_mismatch_silo = 0;
+
 #if TPCC_SMALL
 UInt32 g_max_items = 10000;
 UInt32 g_cust_per_dist = 2000;

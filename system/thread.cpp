@@ -253,15 +253,34 @@ RC thread_t::run() {
 
 #if TERMINATE_BY_COUNT
 		if (warmup_finish && txn_cnt >= MAX_TXN_PER_PART) {
+#if CC_ALG == DIRTY_OCC
+			printf("--------------------------------------------\n");
+			printf("Abort due to write set validation: %d\n", abort_cnt_write_set);
+			printf("Abort due to read set validation: %d\n", abort_cnt_read_set);
+			printf("--------------------------------------------\n");
+			printf("Validation failure due to write set mismatch: %d\n", abort_cnt_write_mismatch);
+			printf("Validation failure due to read set locked: %d\n", abort_cnt_read_locked);
+			printf("Validation failure due to read set mismatch: %d\n", abort_cnt_read_mismatch);
+			printf("--------------------------------------------\n");
+#elif CC_ALG == SILO
+			printf("--------------------------------------------\n");
+			printf("Abort due to write set validation: %d\n", abort_cnt_write_set_silo);
+			printf("Abort due to read set validation: %d\n", abort_cnt_read_set_silo);
+			printf("--------------------------------------------\n");
+			printf("Validation failure due to read set locked: %d\n", abort_cnt_read_locked_silo);
+			printf("Validation failure due to read set mismatch: %d\n", abort_cnt_read_mismatch_silo);
+			printf("--------------------------------------------\n");
+#endif
+
 			assert(txn_cnt == MAX_TXN_PER_PART);
 			if( !ATOM_CAS(_wl->sim_done, false, true) )
-				assert( _wl->sim_done);
+				assert(_wl->sim_done);
 		}
 #else
 		if (warmup_finish && (stats._stats[get_thd_id()]->run_time / 1000000000 >=
 		MAX_RUNTIME)) {
             if( !ATOM_CAS(_wl->sim_done, false, true) )
-                assert( _wl->sim_done);
+                assert(_wl->sim_done);
 		}
 #endif
 
