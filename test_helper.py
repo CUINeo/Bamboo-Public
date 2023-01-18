@@ -21,7 +21,8 @@ theta_list.extend([round(x, 2) for x in list(np.linspace(0.95, 0.99, 5))])
 figure_folder = 'test_figure'
 
 # MVCC, HEKATON and VLL cannot be compiled successfully right now.
-cc_list = ['BAMBOO', 'WOUND_WAIT', 'NO_WAIT', 'WAIT_DIE', 'SILO', 'IC3', 'OCC', 'HSTORE', 'TICTOC']
+# cc_list = ['BAMBOO', 'WOUND_WAIT', 'NO_WAIT', 'WAIT_DIE', 'SILO', 'IC3', 'OCC', 'HSTORE', 'TICTOC']
+cc_list = ['BAMBOO', 'WOUND_WAIT', 'SILO', 'OCC', 'TICTOC', 'DIRTY_OCC']
 
 def replace(filename, pattern, replacement):
     f = open(filename)

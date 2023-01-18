@@ -15,3 +15,5 @@ row_stats.csv
 linux/
 hotspot_result/*
 delta_result/*
+ycsb_result/*
+test_figure/*
