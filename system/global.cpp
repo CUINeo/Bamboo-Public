@@ -76,6 +76,7 @@ int abort_cnt_read_set = 0;
 int abort_cnt_write_mismatch = 0;
 int abort_cnt_read_locked = 0;
 int abort_cnt_read_mismatch = 0;
+bool dirty_access = false;
 
 // Debug (SILO)
 int abort_cnt_write_set_silo = 0;

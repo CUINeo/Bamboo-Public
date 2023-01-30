@@ -21,6 +21,7 @@ void Row_dirty_occ::init(row_t * row) {
 // This function performs a dirty access or a clean access depending on the temperature
 RC Row_dirty_occ::access(txn_man * txn, TsType type, row_t * local_row) {
     if (unlikely(_temp >= DR_THRESHOLD && _stashed_row)) {
+        dirty_access = true;
         // Dirty access
         // Read the latest uncommitted data
         lock_stashed();

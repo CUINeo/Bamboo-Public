@@ -255,6 +255,8 @@ RC thread_t::run() {
 		if (warmup_finish && txn_cnt >= MAX_TXN_PER_PART) {
 #if CC_ALG == DIRTY_OCC
 			printf("--------------------------------------------\n");
+			printf("Dirty accesses performed: %d\n", dirty_access);
+			printf("--------------------------------------------\n");
 			printf("Abort due to write set validation: %d\n", abort_cnt_write_set);
 			printf("Abort due to read set validation: %d\n", abort_cnt_read_set);
 			printf("--------------------------------------------\n");
