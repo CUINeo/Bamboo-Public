@@ -52,7 +52,6 @@ RC Row_dirty_occ::access(txn_man * txn, TsType type, row_t * local_row) {
 
 // This function increments the current temperature by possibility of 1/2^(_temp)
 void Row_dirty_occ::inc_temp() {
-    // TODO: implement more efficient probability algorithm
     if ((double)_rdm.next() / RAND_MAX <= 1 / pow(2, _temp)) {
         uint64_t temp = _temp;
         while (!__sync_bool_compare_and_swap(&_temp, temp, temp + 1)) {
@@ -67,7 +66,6 @@ bool Row_dirty_occ::validate(ts_t tid, bool in_write_set) {
     ts_t v = _tid;
     if (in_write_set) {
         // If the row is in the write set, then the row has already been locked
-        // TODO: figure out why transactions with dirty write cannot commit
         if (tid != (v & (~LOCK_BIT))) {
             abort_cnt_write_mismatch++;
             inc_temp();
