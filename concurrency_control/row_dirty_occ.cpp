@@ -39,6 +39,7 @@ RC Row_dirty_occ::access(txn_man * txn, TsType type, row_t * local_row) {
             txn->last_tid = _stashed_tid & (~LOCK_BIT);
         } else {
             // After the first check, it is possible that the stashed version gets removed
+            release_stashed();
             goto clean_access;
         }
         release_stashed();
