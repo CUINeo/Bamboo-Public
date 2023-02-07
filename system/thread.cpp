@@ -132,6 +132,13 @@ RC thread_t::run() {
 		m_txn->set_txn_id(get_thd_id() + thd_txn_id * g_thread_cnt);
 		thd_txn_id ++;
 
+#if CC_ALG == DIRTY_OCC
+		// Initialize entries for new transactions
+		m_txn->dep_txns = NULL;
+		m_txn->dep_cnt = 0;
+		m_txn->aborted = false;
+#endif
+
 		if ((CC_ALG == HSTORE && !HSTORE_LOCAL_TS)
 			|| CC_ALG == MVCC
 			|| CC_ALG == HEKATON
@@ -254,8 +261,6 @@ RC thread_t::run() {
 #if TERMINATE_BY_COUNT
 		if (warmup_finish && txn_cnt >= MAX_TXN_PER_PART) {
 #if CC_ALG == DIRTY_OCC
-			printf("--------------------------------------------\n");
-			printf("Dirty accesses performed: %d\n", dirty_access);
 			printf("--------------------------------------------\n");
 			printf("Abort due to write set validation: %d\n", abort_cnt_write_set);
 			printf("Abort due to read set validation: %d\n", abort_cnt_read_set);

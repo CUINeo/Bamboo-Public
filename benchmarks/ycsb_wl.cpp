@@ -153,8 +153,7 @@ void * ycsb_wl::init_table_slice() {
 }
 
 RC ycsb_wl::get_txn_man(txn_man *& txn_manager, thread_t * h_thd){
-	txn_manager = (ycsb_txn_man *)
-		_mm_malloc( sizeof(ycsb_txn_man), 64 );
+	txn_manager = (ycsb_txn_man *) _mm_malloc( sizeof(ycsb_txn_man), 64 );
 	new(txn_manager) ycsb_txn_man();
 	txn_manager->init(h_thd, this, h_thd->get_thd_id());
 	return RCOK;

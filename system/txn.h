@@ -21,6 +21,14 @@ struct BBLockEntry;
 // For VLL
 enum TxnType {VLL_Blocked, VLL_Free};
 
+#if CC_ALG == DIRTY_OCC
+class Dependent {
+public:
+	txn_man * _txn;
+	Dependent * _next;
+};
+#endif
+
 class Access {
   public:
 	access_t 	type;
@@ -151,6 +159,10 @@ class txn_man
 #elif CC_ALG == DIRTY_OCC
 	ts_t				last_tid;
 	bool				_validation_no_wait;
+	Dependent *			dep_txns;
+	uint64_t			dep_cnt;
+	pthread_mutex_t *	dep_latch;
+	bool				aborted;
 	// [IC3]
 #elif CC_ALG == IC3
 	TPCCTxnType         curr_type;
@@ -272,6 +284,7 @@ class txn_man
 #elif CC_ALG == SILO
 	RC				    validate_silo();
 #elif CC_ALG == DIRTY_OCC
+	void				register_dep(txn_man * txn);
 	RC                  validate_dirty_occ();
 #endif
 

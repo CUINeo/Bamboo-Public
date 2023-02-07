@@ -100,7 +100,6 @@ extern int abort_cnt_read_set;
 extern int abort_cnt_write_mismatch;
 extern int abort_cnt_read_locked;
 extern int abort_cnt_read_mismatch;
-extern bool dirty_access;
 
 // Debug (SILO)
 extern int abort_cnt_write_set_silo;

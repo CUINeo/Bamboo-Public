@@ -10,29 +10,40 @@
 
 // This function initializes the data structure
 void Row_dirty_occ::init(row_t * row) {
+    _temp = 0;
     _tid = 0;
     _stashed_tid = 0;
+    _stashed_txn = NULL;
     _row = row;
     _stashed_row = NULL;
-    _temp = 0;
     _rdm.init(time(NULL));
 }
 
-// This function performs a dirty access or a clean access depending on the temperature
+// This function performs a dirty access or a clean access.
+// To perform a dirty access (read or write), there are three requirements:
+// 1. The row is a hotspot, which is measured by _temp;
+// 2. This row was dirty-written by other transactions before (_stash_row not NULL);
+// 3. The writer is still running (_stashed_txn->get_txn_id() == _stashed_tid).
 RC Row_dirty_occ::access(txn_man * txn, TsType type, row_t * local_row) {
-    if (unlikely(_temp >= DR_THRESHOLD && _stashed_row)) {
-        dirty_access = true;
+    if (unlikely(_temp >= DR_THRESHOLD && _stashed_row && _stashed_txn->get_txn_id() == _stashed_tid)) {
         // Dirty access
-        // Read the latest uncommitted data
+        // Access the latest uncommitted data
         lock_stashed();
-        if (_stashed_row) {
+        if (_temp >= DR_THRESHOLD && _stashed_row && _stashed_txn->get_txn_id() == _stashed_tid) {
             local_row->copy(_stashed_row);
+            // Register as dependent to the writer transaction
+            _stashed_txn->register_dep(txn);
+            txn->dep_cnt ++;
             txn->last_tid = _stashed_tid & (~LOCK_BIT);
+        } else {
+            // After the first check, it is possible that the stashed version gets removed
+            goto clean_access;
         }
         release_stashed();
     } else {
+    clean_access:
         // Clean access
-        // Read the latest committed data
+        // Access the latest committed data
         ts_t v = 0;
         ts_t v2 = 1;
         while (v2 != v) {
@@ -88,13 +99,14 @@ bool Row_dirty_occ::validate(ts_t tid, bool in_write_set) {
 }
 
 // This function is invoked to perform a dirty write
-void Row_dirty_occ::dirty_write(row_t * data, ts_t tid) {
+void Row_dirty_occ::dirty_write(row_t * data, ts_t tid, txn_man * txn) {
     lock_stashed();
     if (_stashed_row) {
         // Free the previous stashed row
         mem_allocator.free(_stashed_row, sizeof(row_t));
     }
     _stashed_row = data;
+    _stashed_txn = txn;
     _stashed_tid = tid | LOCK_BIT;
     release_stashed();
 }
@@ -115,6 +127,7 @@ void Row_dirty_occ::clear_stashed(ts_t tid) {
         if (_stashed_row && tid == (_stashed_tid & (~LOCK_BIT))) {
             mem_allocator.free(_stashed_row, sizeof(row_t));
             _stashed_row = NULL;
+            _stashed_txn = NULL;
             _stashed_tid = LOCK_BIT;
         }
         release_stashed();

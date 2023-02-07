@@ -12,6 +12,7 @@
 // for info of lock entry
 #include "row_lock.h"
 #include "row_bamboo.h"
+#include "row_dirty_occ.h"
 
 void txn_man::init(thread_t * h_thd, workload * h_wl, uint64_t thd_id) {
 	this->h_thd = h_thd;
@@ -60,6 +61,12 @@ void txn_man::init(thread_t * h_thd, workload * h_wl, uint64_t thd_id) {
 		depqueue[i] = NULL;
 	depqueue_sz = 0;
 	piece_starttime = 0;
+#elif CC_ALG == DIRTY_OCC
+	dep_txns = NULL;
+	dep_cnt = 0;
+	dep_latch = (pthread_mutex_t *) _mm_malloc(sizeof(pthread_mutex_t), 64);
+	pthread_mutex_init(dep_latch, NULL);
+	aborted = false;
 #endif
 }
 
@@ -404,8 +411,7 @@ void txn_man::index_insert(row_t * row, INDEX * index, idx_key_t key) {
 #endif
 }
 
-itemid_t *
-txn_man::index_read(INDEX * index, idx_key_t key, int part_id) {
+itemid_t * txn_man::index_read(INDEX * index, idx_key_t key, int part_id) {
 	uint64_t starttime = get_sys_clock();
 	itemid_t * item;
 	index->index_read(key, item, part_id, get_thd_id());
@@ -413,8 +419,7 @@ txn_man::index_read(INDEX * index, idx_key_t key, int part_id) {
 	return item;
 }
 
-void
-txn_man::index_read(INDEX * index, idx_key_t key, int part_id, itemid_t *& item) {
+void txn_man::index_read(INDEX * index, idx_key_t key, int part_id, itemid_t *& item) {
 	uint64_t starttime = get_sys_clock();
 	index->index_read(key, item, part_id, get_thd_id());
 	INC_TMP_STATS(get_thd_id(), time_index, get_sys_clock() - starttime);
@@ -514,10 +519,24 @@ RC txn_man::finish(RC rc) {
 	}
 	cleanup(rc);
 #elif CC_ALG == DIRTY_OCC
-	if (rc == RCOK)
+	if (rc == RCOK) {
 		rc = validate_dirty_occ();
-	else
+	} else {
+		// Clear all dirty writes
+		for (int rid = 0; rid < row_cnt; rid++) {
+			Access * access = accesses[rid];
+			if (access->type == WR && access->orig_row->manager->is_hotspot()) {
+				access->orig_row->manager->clear_stashed(txn_id);
+			}
+		}
+		// Notify all dependents to abort
+		Dependent * ptr = dep_txns;
+		while (ptr) {
+			ptr->_txn->aborted = true;
+			ptr = ptr->_next;
+		}
 		cleanup(rc);
+	}
 #else
 	cleanup(rc);
 #endif
@@ -534,8 +553,7 @@ RC txn_man::finish(RC rc) {
 	return rc;
 }
 
-void
-txn_man::release() {
+void txn_man::release() {
 	for (int i = 0; i < num_accesses_alloc; i++) {
 	#if CC_ALG == BAMOO || CC_ALG == NO_WAIT || CC_ALG == WOUND_WAIT || CC_ALG == WAIT_DIE || CC_ALG == DL_DETEC
 		delete accesses[i]->lock_entry;

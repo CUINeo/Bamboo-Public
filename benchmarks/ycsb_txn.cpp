@@ -69,7 +69,6 @@ RC ycsb_txn_man::run_txn(base_query * query) {
 #if CC_ALG == BAMBOO && (THREAD_CNT != 1)
             access_id = row_cnt - 1;
 #endif
-
             // Computation //
             // Only do computation when there are more than 1 requests.
             if (m_query->request_cnt > 1) {
@@ -92,20 +91,19 @@ RC ycsb_txn_man::run_txn(base_query * query) {
 #if CC_ALG == DIRTY_OCC
                         // If the row is a hotspot, potentially perform a dirty write
                         if (row->manager->is_hotspot()) {
-                            // Only publish writes that are late in a transaction
+                            // Only publish writes later in a transaction
                             if ((m_query->request_cnt - rid) < (m_query->request_cnt * DELTA)) {
                                 row_t * tmp_row = (row_t *) _mm_malloc(sizeof(row_t), 64);
                                 tmp_row->init(MAX_TUPLE_SIZE);
                                 tmp_row->copy(row_local);
                                 tmp_row->table = row_local->get_table();
-                                row->manager->dirty_write(tmp_row, txn_id);
+                                row->manager->dirty_write(tmp_row, txn_id, this);
                             }
                         }
 #endif
 //					}
                 } 
             }
-
             iteration ++;
             if (req->rtype == RD || req->rtype == WR || iteration == req->scan_len)
                 finish_req = true;
@@ -117,6 +115,11 @@ RC ycsb_txn_man::run_txn(base_query * query) {
                   return finish(Abort);
             }
 #endif
+        }
+        // If the transaction is aborted by other transactions, then abort immediately
+        if (aborted) {
+            rc = Abort;
+            goto final;
         }
     }
     rc = RCOK;

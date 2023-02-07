@@ -15,7 +15,7 @@ public:
     RC                  access(txn_man * txn, TsType type, row_t * local_row);
     void                inc_temp();
     bool                validate(ts_t tid, bool in_write_set);
-    void                dirty_write(row_t * data, ts_t tid);
+    void                dirty_write(row_t * data, ts_t tid, txn_man * txn);
     void                write(row_t * data, ts_t tid);
 
     void                clear_stashed(ts_t tid);
@@ -33,11 +33,12 @@ public:
     ts_t                get_tid();
 
 private:
+    volatile uint64_t   _temp;
     volatile ts_t       _tid;
     volatile ts_t       _stashed_tid;
+    txn_man *           _stashed_txn;
     row_t *             _row;
     row_t *             _stashed_row;
-    uint64_t            _temp;
     myrand              _rdm;
 };
 
