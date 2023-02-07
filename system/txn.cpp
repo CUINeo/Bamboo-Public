@@ -532,7 +532,8 @@ RC txn_man::finish(RC rc) {
 		// Notify all dependents to abort
 		Dependent * ptr = dep_txns;
 		while (ptr) {
-			ptr->_txn->aborted = true;
+			if (ptr->_txn_id == ptr->_txn->get_txn_id())
+				ptr->_txn->aborted = true;
 			ptr = ptr->_next;
 		}
 		cleanup(rc);

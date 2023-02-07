@@ -7,6 +7,7 @@
 // This function appends txn to the end of dep_txns
 void txn_man::register_dep(txn_man * txn) {
     Dependent * new_dep_txn = new Dependent();
+    new_dep_txn->_txn_id = txn->get_txn_id();
     new_dep_txn->_txn = txn;
     new_dep_txn->_next = NULL;
 
@@ -40,7 +41,8 @@ RC txn_man::validate_dirty_occ() {
             // Notify all dependents to abort
             Dependent * ptr = dep_txns;
             while (ptr) {
-                ptr->_txn->aborted = true;
+                if (ptr->_txn_id == ptr->_txn->get_txn_id())
+                    ptr->_txn->aborted = true;
                 ptr = ptr->_next;
             }
             cleanup(Abort);
@@ -139,7 +141,8 @@ final:
         // Notify all dependents to abort
         Dependent * ptr = dep_txns;
         while (ptr) {
-            ptr->_txn->aborted = true;
+            if (ptr->_txn_id == ptr->_txn->get_txn_id())
+                ptr->_txn->aborted = true;
             ptr = ptr->_next;
         }
         cleanup(rc);
@@ -157,7 +160,8 @@ final:
         // Decrease dep_cnt for all dependents
         Dependent * ptr = dep_txns;
         while (ptr) {
-            ptr->_txn->dep_cnt -= 1;
+            if (ptr->_txn_id == ptr->_txn->get_txn_id())
+                ptr->_txn->dep_cnt -= 1;
             ptr = ptr->_next;
         }
         cleanup(rc);

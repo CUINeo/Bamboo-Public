@@ -24,6 +24,7 @@ enum TxnType {VLL_Blocked, VLL_Free};
 #if CC_ALG == DIRTY_OCC
 class Dependent {
 public:
+	uint64_t _txn_id;
 	txn_man * _txn;
 	Dependent * _next;
 };

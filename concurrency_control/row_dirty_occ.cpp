@@ -25,11 +25,13 @@ void Row_dirty_occ::init(row_t * row) {
 // 2. This row was dirty-written by other transactions before (_stash_row not NULL);
 // 3. The writer is still running (_stashed_txn->get_txn_id() == _stashed_tid).
 RC Row_dirty_occ::access(txn_man * txn, TsType type, row_t * local_row) {
-    if (unlikely(_temp >= DR_THRESHOLD && _stashed_row && _stashed_txn->get_txn_id() == _stashed_tid)) {
+    if (unlikely(_temp >= DR_THRESHOLD && _stashed_row 
+        && _stashed_txn->get_txn_id() == (_stashed_tid & (~LOCK_BIT)))) {
         // Dirty access
         // Access the latest uncommitted data
         lock_stashed();
-        if (_temp >= DR_THRESHOLD && _stashed_row && _stashed_txn->get_txn_id() == _stashed_tid) {
+        if (_temp >= DR_THRESHOLD && _stashed_row 
+            && _stashed_txn->get_txn_id() == (_stashed_tid & (~LOCK_BIT))) {
             local_row->copy(_stashed_row);
             // Register as dependent to the writer transaction
             _stashed_txn->register_dep(txn);
