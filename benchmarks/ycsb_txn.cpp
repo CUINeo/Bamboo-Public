@@ -112,7 +112,7 @@ RC ycsb_txn_man::run_txn(base_query * query) {
             if (finish_req && (req->rtype == WR) && (rid <= retire_threshold)) {
             	//printf("[txn-%lu] retire %d requests\n", get_txn_id(), rid);
                 if (retire_row(access_id) == Abort)
-                  return finish(Abort);
+                    return finish(Abort);
             }
 #endif
         }
