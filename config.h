@@ -114,7 +114,7 @@
 #define IC3_FIELD_LOCKING   false // should not be true
 #define IC3_MODIFIED_TPCC   false
 // [DIRTY_OCC]
-#define DR_THRESHOLD        10
+#define DR_THRESHOLD        15
 #define DELTA               0.5
 #define VAL_WAIT_TIMEOUT    1000
 
@@ -153,7 +153,7 @@
 #define LONG_TXN_READ_RATIO	0.5
 #define FIELD_PER_TUPLE			10
 // ==== [YCSB-synthetic] ====
-#define SYNTHETIC_YCSB      false
+#define SYNTHETIC_YCSB      true
 #define POS_HS              TOP
 #define SPECIFIED_RATIO     0
 #define FLIP_RATIO          0
