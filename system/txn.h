@@ -163,6 +163,7 @@ class txn_man
 	Dependent *			dep_txns;
 	uint64_t			dep_cnt;
 	pthread_mutex_t *	dep_latch;
+	pthread_mutex_t *	dep_cnt_latch;
 	bool				aborted;
 	// [IC3]
 #elif CC_ALG == IC3
@@ -286,6 +287,10 @@ class txn_man
 	RC				    validate_silo();
 #elif CC_ALG == DIRTY_OCC
 	void				register_dep(txn_man * txn);
+	void				inc_dep_cnt();
+	void				dec_dep_cnt();
+	void				commit_dep();
+	void				abort_dep();
 	RC                  validate_dirty_occ();
 #endif
 

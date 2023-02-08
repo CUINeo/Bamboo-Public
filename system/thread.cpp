@@ -134,7 +134,7 @@ RC thread_t::run() {
 
 #if CC_ALG == DIRTY_OCC
 		// Initialize entries for new transactions
-		m_txn->dep_txns = NULL;
+		m_txn->abort_dep();
 		m_txn->dep_cnt = 0;
 		m_txn->aborted = false;
 #endif

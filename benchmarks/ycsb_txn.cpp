@@ -116,11 +116,13 @@ RC ycsb_txn_man::run_txn(base_query * query) {
             }
 #endif
         }
+#if CC_ALG == DIRTY_OCC
         // If the transaction is aborted by other transactions, then abort immediately
         if (aborted) {
             rc = Abort;
             goto final;
         }
+#endif
     }
     rc = RCOK;
 final:

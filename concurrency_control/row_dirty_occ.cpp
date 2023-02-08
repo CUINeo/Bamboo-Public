@@ -23,26 +23,30 @@ void Row_dirty_occ::init(row_t * row) {
 // To perform a dirty access (read or write), there are three requirements:
 // 1. The row is a hotspot, which is measured by _temp;
 // 2. This row was dirty-written by other transactions before (_stash_row not NULL);
-// 3. The writer is still running (_stashed_txn->get_txn_id() == _stashed_tid).
+// 3. The writer is still running (_stashed_txn->get_txn_id() == _stashed_tid);
+// 4. The writer has a smaller txn_id than that of the reader (to avoid deadlock).
 RC Row_dirty_occ::access(txn_man * txn, TsType type, row_t * local_row) {
-    if (unlikely(_temp >= DR_THRESHOLD && _stashed_row 
+    if (unlikely(_temp >= DR_THRESHOLD && _stashed_row && _stashed_txn
         && _stashed_txn->get_txn_id() == (_stashed_tid & (~LOCK_BIT)))) {
-        // Dirty access
-        // Access the latest uncommitted data
-        lock_stashed();
-        if (_temp >= DR_THRESHOLD && _stashed_row 
-            && _stashed_txn->get_txn_id() == (_stashed_tid & (~LOCK_BIT))) {
-            local_row->copy(_stashed_row);
-            // Register as dependent to the writer transaction
-            _stashed_txn->register_dep(txn);
-            txn->dep_cnt ++;
-            txn->last_tid = _stashed_tid & (~LOCK_BIT);
-        } else {
-            // After the first check, it is possible that the stashed version gets removed
+        if ((_stashed_tid & (~LOCK_BIT)) < txn->get_txn_id()) {
+            // Dirty access
+            // Access the latest uncommitted data
+            lock_stashed();
+            if (_temp >= DR_THRESHOLD && _stashed_row && _stashed_txn
+                && (_stashed_tid & (~LOCK_BIT)) < txn->get_txn_id()
+                && _stashed_txn->get_txn_id() == (_stashed_tid & (~LOCK_BIT))) {
+                local_row->copy(_stashed_row);
+                // Register as dependent to the writer transaction
+                _stashed_txn->register_dep(txn);
+                txn->inc_dep_cnt();
+                txn->last_tid = _stashed_tid & (~LOCK_BIT);
+            } else {
+                // After the first check, it is possible that the stashed version gets removed
+                release_stashed();
+                goto clean_access;
+            }
             release_stashed();
-            goto clean_access;
         }
-        release_stashed();
     } else {
     clean_access:
         // Clean access

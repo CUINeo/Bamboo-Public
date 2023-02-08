@@ -66,6 +66,8 @@ void txn_man::init(thread_t * h_thd, workload * h_wl, uint64_t thd_id) {
 	dep_cnt = 0;
 	dep_latch = (pthread_mutex_t *) _mm_malloc(sizeof(pthread_mutex_t), 64);
 	pthread_mutex_init(dep_latch, NULL);
+	dep_cnt_latch = (pthread_mutex_t *) _mm_malloc(sizeof(pthread_mutex_t), 64);
+	pthread_mutex_init(dep_cnt_latch, NULL);
 	aborted = false;
 #endif
 }
@@ -529,13 +531,7 @@ RC txn_man::finish(RC rc) {
 				access->orig_row->manager->clear_stashed(txn_id);
 			}
 		}
-		// Notify all dependents to abort
-		Dependent * ptr = dep_txns;
-		while (ptr) {
-			if (ptr->_txn_id == ptr->_txn->get_txn_id())
-				ptr->_txn->aborted = true;
-			ptr = ptr->_next;
-		}
+		abort_dep();
 		cleanup(rc);
 	}
 #else

@@ -1,6 +1,7 @@
 #include "txn.h"
 #include "row.h"
 #include "row_dirty_occ.h"
+#include <chrono>
 
 #if CC_ALG == DIRTY_OCC
 
@@ -25,10 +26,51 @@ void txn_man::register_dep(txn_man * txn) {
     pthread_mutex_unlock(dep_latch);
 }
 
+void txn_man::inc_dep_cnt() {
+    pthread_mutex_lock(dep_cnt_latch);
+    dep_cnt ++;
+    pthread_mutex_unlock(dep_cnt_latch);
+}
+
+void txn_man::dec_dep_cnt() {
+    pthread_mutex_lock(dep_cnt_latch);
+    dep_cnt --;
+    pthread_mutex_unlock(dep_cnt_latch);
+}
+
+void txn_man::commit_dep() {
+    pthread_mutex_lock(dep_latch);
+    // Decrease dep_cnt for all dependents
+    Dependent * ptr = dep_txns;
+    while (ptr) {
+        if (ptr->_txn_id == ptr->_txn->get_txn_id())
+            ptr->_txn->dec_dep_cnt();
+        ptr = ptr->_next;
+    }
+    dep_txns = NULL;
+    pthread_mutex_unlock(dep_latch);
+}
+
+void txn_man::abort_dep() {
+    pthread_mutex_lock(dep_latch);
+    // Notify all dependents to abort
+    Dependent * ptr = dep_txns;
+    while (ptr) {
+        if (ptr->_txn_id == ptr->_txn->get_txn_id())
+            ptr->_txn->aborted = true;
+        ptr = ptr->_next;
+    }
+    dep_txns = NULL;
+    pthread_mutex_unlock(dep_latch);
+}
+
 RC txn_man::validate_dirty_occ() {
     RC rc = RCOK;
 
-    // Wait for all dependent transactions to commit or abort first
+    // Wait for all dependent transactions to commit or abort first, abort on timeout
+    uint64_t cnt = 0;
+    std::chrono::steady_clock::time_point start, end;
+    start = std::chrono::steady_clock::now();
     do {
         if (aborted) {
             // Clear all dirty writes
@@ -38,15 +80,16 @@ RC txn_man::validate_dirty_occ() {
                     access->orig_row->manager->clear_stashed(txn_id);
                 }
             }
-            // Notify all dependents to abort
-            Dependent * ptr = dep_txns;
-            while (ptr) {
-                if (ptr->_txn_id == ptr->_txn->get_txn_id())
-                    ptr->_txn->aborted = true;
-                ptr = ptr->_next;
-            }
+            abort_dep();
             cleanup(Abort);
             return Abort;
+        }
+        cnt ++;
+        if (cnt % 10000 == 0) {
+            end = std::chrono::steady_clock::now();
+            if (std::chrono::duration_cast<std::chrono::microseconds>(end - start).count()
+                >= VAL_WAIT_TIMEOUT)
+                aborted = true;
         }
         PAUSE
     } while (dep_cnt > 0);
@@ -138,13 +181,7 @@ final:
                 access->orig_row->manager->clear_stashed(txn_id);
             }
         }
-        // Notify all dependents to abort
-        Dependent * ptr = dep_txns;
-        while (ptr) {
-            if (ptr->_txn_id == ptr->_txn->get_txn_id())
-                ptr->_txn->aborted = true;
-            ptr = ptr->_next;
-        }
+        abort_dep();
         cleanup(rc);
     } else {
         for (int i = 0; i < wr_cnt; i++) {
@@ -157,13 +194,7 @@ final:
                 access->orig_row->manager->clear_stashed(txn_id);
             }
         }
-        // Decrease dep_cnt for all dependents
-        Dependent * ptr = dep_txns;
-        while (ptr) {
-            if (ptr->_txn_id == ptr->_txn->get_txn_id())
-                ptr->_txn->dep_cnt -= 1;
-            ptr = ptr->_next;
-        }
+        commit_dep();
         cleanup(rc);
     }
     return rc;

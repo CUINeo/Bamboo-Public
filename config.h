@@ -116,6 +116,7 @@
 // [DIRTY_OCC]
 #define DR_THRESHOLD        10
 #define DELTA               0.5
+#define VAL_WAIT_TIMEOUT    1000
 
 /***********************************************/
 // Logging
@@ -140,7 +141,7 @@
 // ==== [YCSB] ====
 #define INIT_PARALLELISM		40
 #define SYNTH_TABLE_SIZE    10000000
-#define ZIPF_THETA          0.8
+#define ZIPF_THETA          0.9
 #define READ_PERC           0.5
 #define WRITE_PERC 					1  // if want no scan, write + read >= 1
 #define SCAN_PERC 					0
