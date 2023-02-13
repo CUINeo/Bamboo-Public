@@ -153,7 +153,7 @@
 #define LONG_TXN_READ_RATIO	0.5
 #define FIELD_PER_TUPLE			10
 // ==== [YCSB-synthetic] ====
-#define SYNTHETIC_YCSB      true
+#define SYNTHETIC_YCSB      false
 #define POS_HS              TOP
 #define SPECIFIED_RATIO     0
 #define FLIP_RATIO          0
